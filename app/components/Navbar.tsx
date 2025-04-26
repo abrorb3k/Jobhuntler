@@ -21,13 +21,8 @@ const Navbar = () => {
           />
         </Link>
 
-        <div className="hidden md:flex gap-6">
-          <Link
-            className="hover:text-blue-700 dark:hover:text-blue-400 duration-300"
-            href="/jobs"
-          >
-            Jobs
-          </Link>
+        <div >
+          
           <Link
             className="hover:text-blue-700 dark:hover:text-blue-400 duration-300"
             href="/companies"
