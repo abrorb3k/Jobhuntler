@@ -1,5 +1,5 @@
 
-export let users: {
+export const users: {
   fullName: string;
   email: string;
   password: string;

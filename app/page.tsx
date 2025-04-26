@@ -272,7 +272,7 @@ const Page = () => {
           <p>Loading jobs...</p>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-8">
-            {filteredJobs.map((job: any) => (
+            {filteredJobs.map((job: Job) => (
               <div
                 key={job.id}
                 className="relative p-6 bg-white dark:bg-gray-800 rounded-lg shadow hover:shadow-xl transition-shadow duration-300"

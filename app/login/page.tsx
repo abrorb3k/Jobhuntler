@@ -64,7 +64,6 @@ const LoginPage = () => {
               placeholder="Enter email"
             />
           </label>
-
           <label htmlFor="password" className="flex flex-col text-xl mt-4">
             Password
             <input
@@ -89,7 +88,7 @@ const LoginPage = () => {
         </form>
 
         <div className="flex gap-2 items-center mt-5">
-          <h5 className="text-[#707481]">Don't have an account?</h5>
+          <h5 className="text-[#707481]">Dont have an account?</h5>
           <Link
             className="text-[#4640DE] font-bold hover:text-[#4540deab] duration-300"
             href="/register"

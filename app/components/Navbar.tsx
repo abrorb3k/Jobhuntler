@@ -3,10 +3,8 @@
 import React from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { useTheme } from "../context/ThemeContext"; // context biz avval yaratganmiz
 
 const Navbar = () => {
-  const { theme, toggleTheme } = useTheme();
 
   return (
     <div className="flex justify-between items-center px-5 md:px-10 lg:px-40 py-5 bg-white dark:bg-gray-900 text-black dark:text-white transition-colors">
@@ -46,13 +44,6 @@ const Navbar = () => {
         >
           Sign Up
         </Link>
-
-        {/* <button
-          onClick={toggleTheme}
-          className="p-2 rounded-full bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors"
-        >
-          {theme === "light" ? "🌙" : "☀️"}
-        </button> */}
       </div>
     </div>
   );
