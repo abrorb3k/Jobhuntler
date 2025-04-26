@@ -1,0 +1,31 @@
+@import "tailwindcss";
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-epilogue: 'Epilogue', sans-serif;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #202430;
+    --foreground: #ededed;
+  }
+}
+@layer base {
+  html {
+    @apply bg-white dark:bg-gray-900 text-black dark:text-white;
+  }
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: 'Epilogue', sans-serif;
+}
+
