@@ -1,5 +1,4 @@
 "use client";
-
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import Categories from "./components/Categories";
@@ -7,7 +6,7 @@ import Footer from "./components/Footer";
 import ThemeToggle from "./components/ThemeToggle";
 
 type Job = {
-  id: number
+  id: number;
   title: string;
   company: string;
   location: string;
@@ -23,7 +22,6 @@ const Page = () => {
   const [filteredJobs, setFilteredJobs] = useState<Job[]>([]);
   const [showAddForm, setShowAddForm] = useState(false);
   const [theme, setTheme] = useState("light");
-  // import ThemeToggle from "./components/ThemeToggle";
 
   const [newJob, setNewJob] = useState({
     title: "",
@@ -32,6 +30,23 @@ const Page = () => {
     description: "",
     job_type: "Full Time",
   });
+
+  useEffect(() => {
+    const savedTheme =
+      localStorage.getItem("theme") ||
+      (window.matchMedia("(prefers-color-scheme: dark)").matches
+        ? "dark"
+        : "light");
+    setTheme(savedTheme);
+    document.documentElement.classList.toggle("dark", savedTheme === "dark");
+  }, []);
+
+  const toggleTheme = () => {
+    const newTheme = theme === "light" ? "dark" : "light";
+    setTheme(newTheme);
+    localStorage.setItem("theme", newTheme);
+    document.documentElement.classList.toggle("dark", newTheme === "dark");
+  };
 
   useEffect(() => {
     const fetchJobs = async () => {
@@ -52,28 +67,6 @@ const Page = () => {
     fetchJobs();
   }, []);
 
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      const storedTheme = localStorage.getItem("theme");
-      if (storedTheme) {
-        setTheme(storedTheme);
-        document.documentElement.classList.toggle(
-          "dark",
-          storedTheme === "dark"
-        );
-      }
-    }
-  }, []);
-
-  const toggleTheme = () => {
-    const newTheme = theme === "light" ? "dark" : "light";
-    setTheme(newTheme);
-    if (typeof window !== "undefined") {
-      localStorage.setItem("theme", newTheme);
-      document.documentElement.classList.toggle("dark", newTheme === "dark");
-    }
-  };
-
   const handleSearch = () => {
     const filtered = jobs.filter((job) =>
       job.title.toLowerCase().includes(searchTerm.toLowerCase())
@@ -87,9 +80,7 @@ const Page = () => {
         "https://mustafocoder.pythonanywhere.com/api/jobs/",
         {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify(newJob),
         }
       );
@@ -110,211 +101,336 @@ const Page = () => {
   };
 
   return (
-    <div className="px-6 md:px-20 lg:px-40 bg-white dark:bg-gray-900 min-h-screen text-black dark:text-white transition-colors duration-300">
-      {/* Theme Toggle Button */}
-       <ThemeToggle/>     
- 
-
-      {/* Content */}
-      <h1 className="text-5xl md:text-6xl lg:text-7xl w-full md:w-[400px] pt-10 font-bold">
-        Discover more than <span className="text-[#26A4FF]">5000+ Jobs</span>
-      </h1>
-      <h2 className="w-full md:w-[450px] text-xl pt-7">
-        Great platform for job seekers looking for new career heights and
-        passionate about startups.
-      </h2>
-
-      {/* Search */}
-      <div className="flex flex-col md:flex-row justify-between p-4 bg-white dark:bg-gray-800 w-full md:w-[900px] mt-6 rounded-lg shadow">
-        <div className="flex gap-3 mb-4 md:mb-0">
-          <Image src="/search.svg" alt="search" width={30} height={30} />
-          <input
-            className="text-gray-800 dark:text-white dark:bg-gray-700 w-[230px] border-b-2 border-gray-300 dark:border-gray-600 focus:outline-none"
-            type="search"
-            placeholder="Job title or keyword"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
+    <div
+      className={`min-h-screen transition-colors duration-300 ${
+        theme === "dark"
+          ? "bg-gray-900 text-gray-100"
+          : "bg-gray-50 text-gray-900"
+      }`}
+    >
+      <header className="container mx-auto px-6 py-16">
+        <div className="max-w-4xl">
+          <h1 className="text-5xl md:text-6xl font-bold leading-tight">
+            Discover more than <span className="text-blue-500">5000+ Jobs</span>
+          </h1>
+          <p className="text-xl mt-6 opacity-90 leading-relaxed">
+            Great platform for job seekers looking for new career heights and
+            passionate about startups.
+          </p>
         </div>
-        <button
-          onClick={handleSearch}
-          className="px-6 py-3 bg-[#4640DE] text-white rounded hover:bg-[#3730a3]"
+      </header>
+
+      <section className="container mx-auto px-6 -mt-8">
+        <div
+          className={`flex flex-col md:flex-row gap-4 p-6 rounded-2xl ${
+            theme === "dark"
+              ? "bg-gray-800 border-gray-700"
+              : "bg-white border border-gray-200"
+          } shadow-sm hover:shadow-md transition-all max-w-4xl`}
         >
-          Search my job
-        </button>
-      </div>
+          <div className="flex items-center flex-1 gap-4">
+            <div
+              className={`p-3 rounded-lg ${
+                theme === "dark" ? "bg-gray-700" : "bg-gray-100"
+              }`}
+            >
+              <Image src="/search.svg" alt="search" width={24} height={24} />
+            </div>
+            <input
+              className={`flex-1 text-lg focus:outline-none bg-transparent ${
+                theme === "dark"
+                  ? "placeholder-gray-400"
+                  : "placeholder-gray-500"
+              }`}
+              type="search"
+              placeholder="Job title or keyword"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+          </div>
+          <button
+            onClick={handleSearch}
+            className="px-8 py-4 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors font-medium"
+          >
+            Search my job
+          </button>
+        </div>
 
-      {/* Popular */}
-      <h3 className="pt-4 text-gray-400 dark:text-gray-500">
-        Popular : UI Designer, UX Researcher, Android, Admin
-      </h3>
+        <div className="mt-8 flex flex-wrap items-center gap-4">
+          <span className="opacity-70 font-medium">Popular:</span>
+          {[
+            "UI Designer",
+            "UX Researcher",
+            "Android",
+            "Admin",
+            "Developer",
+          ].map((tag) => (
+            <span
+              key={tag}
+              className={`px-4 py-2 rounded-full text-sm ${
+                theme === "dark"
+                  ? "bg-gray-700 text-gray-300"
+                  : "bg-blue-50 text-blue-600"
+              } hover:bg-blue-100 transition-colors cursor-pointer`}
+            >
+              {tag}
+            </span>
+          ))}
+        </div>
+      </section>
 
-      {/* Companies */}
-      <div className="mt-20">
-        <h3 className="opacity-50">Companies we helped grow</h3>
-      </div>
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-10 mt-5 my-10">
-        <Image src="/img-1.svg" alt="img" width={100} height={100} />
-        <Image
-          src="/img-2.svg"
-          alt="img"
-          width={100}
-          height={100}
-          className="opacity-30"
-        />
-        <Image
-          src="/tesla.svg"
-          alt="tesla"
-          width={100}
-          height={100}
-          className="opacity-30"
-        />
-        <Image
-          src="/img-4.svg"
-          alt="img"
-          width={100}
-          height={100}
-          className="opacity-30"
-        />
-        <Image
-          src="/img-5.svg"
-          alt="img"
-          width={100}
-          height={100}
-          className="opacity-30"
-        />
-      </div>
-
-      {/* Category */}
-      <div className="mb-10">
-        <h3 className="text-5xl font-bold mb-10">
-          Explore by <span className="text-[#26A4FF]">category</span>
+      <section className="container mx-auto px-6 mt-24">
+        <h3 className="opacity-70 font-medium mb-8">
+          TRUSTED BY TOP COMPANIES
         </h3>
-        <Categories />
-      </div>
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-6">
+          {[1, 2, 3, 4, 5].map((i) => (
+            <div
+              key={i}
+              className={`p-6 rounded-xl flex items-center justify-center ${
+                theme === "dark"
+                  ? "bg-gray-800"
+                  : "bg-gray-800 border border-gray-200"
+              } transition-all hover:shadow-md`}
+            >
+              <Image
+                src={`/img-${i}.svg`}
+                alt="company logo"
+                width={120}
+                height={60}
+                className={`${
+                  i !== 1 ? "opacity-60 grayscale" : ""
+                } hover:opacity-100 hover:grayscale-0 transition-all`}
+              />
+            </div>
+          ))}
+        </div>
+      </section>
 
-      {/* Add Job */}
-      <div className="mb-10">
+      <section className="container mx-auto px-6 my-24">
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-12 gap-6">
+          <div>
+            <h2 className="text-4xl font-bold">
+              Explore by <span className="text-blue-500">category</span>
+            </h2>
+            <p className="opacity-70 mt-3">Browse jobs by specializations</p>
+          </div>
+          <button className="text-blue-600 hover:text-blue-700 font-medium flex items-center gap-2">
+            View all categories <span>→</span>
+          </button>
+        </div>
+        <Categories theme={theme} />
+      </section>
+
+      <section className="container mx-auto px-6 my-16">
         <button
           onClick={() => setShowAddForm(true)}
-          className="px-6 py-3 bg-green-500 text-white rounded hover:bg-green-600 mb-6"
+          className="px-6 py-3 bg-green-500 hover:bg-green-600 text-white rounded-lg transition-colors font-medium flex items-center gap-2"
         >
-          + Add New Job
+          <span>+</span> Add New Job
         </button>
 
         {showAddForm && (
-          <div className="p-6 mb-10 bg-white dark:bg-gray-800 rounded-lg shadow space-y-4">
-            <input
-              type="text"
-              placeholder="Job Title"
-              className="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-              value={newJob.title}
-              onChange={(e) => setNewJob({ ...newJob, title: e.target.value })}
-            />
-            <input
-              type="text"
-              placeholder="Company"
-              className="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-              value={newJob.company}
-              onChange={(e) =>
-                setNewJob({ ...newJob, company: e.target.value })
-              }
-            />
-            <input
-              type="text"
-              placeholder="Location"
-              className="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-              value={newJob.location}
-              onChange={(e) =>
-                setNewJob({ ...newJob, location: e.target.value })
-              }
-            />
-            <textarea
-              placeholder="Description"
-              className="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-              value={newJob.description}
-              onChange={(e) =>
-                setNewJob({ ...newJob, description: e.target.value })
-              }
-            ></textarea>
-            <select
-              className="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-              value={newJob.job_type}
-              onChange={(e) =>
-                setNewJob({ ...newJob, job_type: e.target.value })
-              }
-            >
-              <option>Full Time</option>
-              <option>Part Time</option>
-              <option>Internship</option>
-              <option>Remote</option>
-            </select>
-            <div className="flex gap-4">
+          <div
+            className={`mt-8 p-8 rounded-2xl ${
+              theme === "dark"
+                ? "bg-gray-800"
+                : "bg-white border border-gray-200"
+            } shadow-sm`}
+          >
+            <h3 className="text-2xl font-bold mb-6">Add New Job Listing</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <label className="block opacity-70 mb-2">Job Title</label>
+                <input
+                  type="text"
+                  className={`w-full p-3 rounded-lg ${
+                    theme === "dark"
+                      ? "bg-gray-700 border-gray-600"
+                      : "bg-white border border-gray-300"
+                  } focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                  value={newJob.title}
+                  onChange={(e) =>
+                    setNewJob({ ...newJob, title: e.target.value })
+                  }
+                />
+              </div>
+              <div>
+                <label className="block opacity-70 mb-2">Company</label>
+                <input
+                  type="text"
+                  className={`w-full p-3 rounded-lg ${
+                    theme === "dark"
+                      ? "bg-gray-700 border-gray-600"
+                      : "bg-white border border-gray-300"
+                  } focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                  value={newJob.company}
+                  onChange={(e) =>
+                    setNewJob({ ...newJob, company: e.target.value })
+                  }
+                />
+              </div>
+              <div>
+                <label className="block opacity-70 mb-2">Location</label>
+                <input
+                  type="text"
+                  className={`w-full p-3 rounded-lg ${
+                    theme === "dark"
+                      ? "bg-gray-700 border-gray-600"
+                      : "bg-white border border-gray-300"
+                  } focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                  value={newJob.location}
+                  onChange={(e) =>
+                    setNewJob({ ...newJob, location: e.target.value })
+                  }
+                />
+              </div>
+              <div>
+                <label className="block opacity-70 mb-2">Job Type</label>
+                <select
+                  className={`w-full p-3 rounded-lg ${
+                    theme === "dark"
+                      ? "bg-gray-700 border-gray-600"
+                      : "bg-white border border-gray-300"
+                  } focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                  value={newJob.job_type}
+                  onChange={(e) =>
+                    setNewJob({ ...newJob, job_type: e.target.value })
+                  }
+                >
+                  <option>Full Time</option>
+                  <option>Part Time</option>
+                  <option>Internship</option>
+                  <option>Remote</option>
+                </select>
+              </div>
+              <div className="md:col-span-2">
+                <label className="block opacity-70 mb-2">Description</label>
+                <textarea
+                  rows={5}
+                  className={`w-full p-3 rounded-lg ${
+                    theme === "dark"
+                      ? "bg-gray-700 border-gray-600"
+                      : "bg-white border border-gray-300"
+                  } focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                  value={newJob.description}
+                  onChange={(e) =>
+                    setNewJob({ ...newJob, description: e.target.value })
+                  }
+                ></textarea>
+              </div>
+            </div>
+            <div className="flex gap-4 mt-8">
               <button
                 onClick={handleAddJob}
-                className="px-6 py-3 bg-blue-500 text-white rounded hover:bg-blue-600"
+                className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors font-medium"
               >
-                Submit
+                Submit Job
               </button>
               <button
                 onClick={() => setShowAddForm(false)}
-                className="px-6 py-3 bg-gray-400 text-white rounded hover:bg-gray-500"
+                className="px-6 py-3 bg-gray-200 hover:bg-gray-300 text-gray-800 rounded-lg transition-colors font-medium"
               >
                 Cancel
               </button>
             </div>
           </div>
         )}
-      </div>
+      </section>
 
-      {/* Jobs List */}
-      <div className="mb-10">
-        <h3 className="text-5xl font-bold mb-5">
-          Featured <span className="text-[#26A4FF]">jobs</span>
-        </h3>
+      <section className="container mx-auto px-6 my-24">
+        <div className="flex justify-between items-end mb-12">
+          <div>
+            <h2 className="text-4xl font-bold">
+              Featured <span className="text-blue-500">jobs</span>
+            </h2>
+            <p className="opacity-70 mt-3">
+              Browse through our latest job listings
+            </p>
+          </div>
+          <button className="text-blue-600 hover:text-blue-700 font-medium">
+            View all jobs →
+          </button>
+        </div>
 
         {loading ? (
-          <p>Loading jobs...</p>
+          <div className="flex justify-center items-center h-64">
+            <div
+              className={`animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 ${
+                theme === "dark" ? "border-blue-400" : "border-blue-500"
+              }`}
+            ></div>
+          </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {filteredJobs.map((job) => (
               <div
                 key={job.id}
-                className="relative p-6 bg-white dark:bg-gray-800 rounded-lg shadow hover:shadow-xl transition-shadow duration-300"
+                className={`p-6 rounded-xl transition-all hover:shadow-md ${
+                  theme === "dark"
+                    ? "bg-gray-800 hover:bg-gray-750"
+                    : "bg-white hover:bg-gray-50 border border-gray-200"
+                }`}
               >
-                <span className="absolute top-4 right-4 border border-[#4640DE] text-[#4640DE] px-3 py-1 text-xs rounded-md hover:bg-amber-100">
-                  {job.job_type || "Full Time"}
-                </span>
-                <div className="mb-4">
-                  <div className="w-12 h-12 bg-gray-100 dark:bg-gray-700 flex items-center justify-center rounded-lg text-2xl font-bold text-[#4640DE]">
-                    {job.company?.charAt(0) || "R"}
+                <div className="flex justify-between items-start mb-4">
+                  <div
+                    className={`w-14 h-14 flex items-center justify-center rounded-lg text-2xl font-bold ${
+                      theme === "dark"
+                        ? "bg-gray-700 text-blue-400"
+                        : "bg-blue-100 text-blue-600"
+                    }`}
+                  >
+                    {job.company?.charAt(0) || "J"}
                   </div>
+                  <span
+                    className={`px-3 py-1 rounded-md text-sm ${
+                      theme === "dark"
+                        ? "bg-gray-700 text-blue-400 border border-gray-600"
+                        : "bg-blue-50 text-blue-600 border border-blue-100"
+                    }`}
+                  >
+                    {job.job_type || "Full Time"}
+                  </span>
                 </div>
-                <h4 className="font-semibold text-lg mb-1">{job.title}</h4>
-                <p className="text-gray-500 dark:text-gray-400 text-sm">
-                  {job.company} • {job.location || "Unknown"}
+                <h3 className="text-xl font-semibold mb-2">{job.title}</h3>
+                <p className="mb-4 opacity-80">
+                  {job.company} • {job.location || "Remote"}
                 </p>
-                <p className="mt-3 text-gray-600 dark:text-gray-400 text-sm line-clamp-2">
+                <p className="mb-6 line-clamp-3 opacity-80">
                   {job.description}
                 </p>
-
-                <div className="flex gap-2 mt-4 flex-wrap">
-                  {job.tags?.map((tag, index) => (
+                <div className="flex flex-wrap gap-2">
+                  {job.tags?.slice(0, 3).map((tag, index) => (
                     <span
                       key={index}
-                      className="px-3 py-1 bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 text-xs rounded-full"
+                      className={`px-3 py-1 rounded-full text-xs ${
+                        theme === "dark"
+                          ? "bg-gray-700 text-gray-300"
+                          : "bg-gray-100 text-gray-700"
+                      }`}
                     >
                       {tag}
                     </span>
                   ))}
                 </div>
+                <button
+                  className={`mt-6 w-full py-2 rounded-lg font-medium ${
+                    theme === "dark"
+                      ? "bg-gray-700 hover:bg-gray-600 text-white"
+                      : "bg-gray-100 hover:bg-gray-200 text-gray-800"
+                  } transition-colors`}
+                >
+                  View Details
+                </button>
               </div>
             ))}
           </div>
         )}
-      </div>
+      </section>
 
-      <Footer />
+      <Footer theme={theme} />
+
+      <ThemeToggle theme={theme} toggleTheme={toggleTheme} />
     </div>
   );
 };
