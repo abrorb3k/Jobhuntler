@@ -64,7 +64,7 @@ const Page = () => {
   };
 
   const handleSearch = () => {
-    const filtered = jobs.filter((job: any) =>
+    const filtered = jobs.filter((job: Job) =>
       job.title.toLowerCase().includes(searchTerm.toLowerCase())
     );
     setFilteredJobs(filtered);
