@@ -1,4 +1,6 @@
-// app/jobs/create/page.tsx
+"use client";
+// import React { useState } from "react";
+import React  from "react";
 import { useState } from "react";
 import { useRouter } from "next/router";
 import { useForm } from "react-hook-form";
