@@ -1,7 +1,13 @@
 module.exports = {
   darkMode: "class",
   theme: {
-    extend: {},
+    extend: {
+      transitionProperty: {
+        background: "background-color",
+        colors:
+          "color, background-color, border-color, text-decoration-color, fill, stroke",
+      },
+    },
   },
   plugins: [],
 };

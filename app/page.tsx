@@ -4,14 +4,26 @@ import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import Categories from "./components/Categories";
 import Footer from "./components/Footer";
+import ThemeToggle from "./components/ThemeToggle";
+
+type Job = {
+  id: number
+  title: string;
+  company: string;
+  location: string;
+  description: string;
+  job_type: string;
+  tags?: string[];
+};
 
 const Page = () => {
-  const [jobs, setJobs] = useState([]);
+  const [jobs, setJobs] = useState<Job[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
-  const [filteredJobs, setFilteredJobs] = useState([]);
+  const [filteredJobs, setFilteredJobs] = useState<Job[]>([]);
   const [showAddForm, setShowAddForm] = useState(false);
-  const [theme, setTheme] = useState("light"); // 🌗 Dark/Light mode
+  const [theme, setTheme] = useState("light");
+  // import ThemeToggle from "./components/ThemeToggle";
 
   const [newJob, setNewJob] = useState({
     title: "",
@@ -40,7 +52,6 @@ const Page = () => {
     fetchJobs();
   }, []);
 
-  // Theme bilan ishlash
   useEffect(() => {
     if (typeof window !== "undefined") {
       const storedTheme = localStorage.getItem("theme");
@@ -64,7 +75,7 @@ const Page = () => {
   };
 
   const handleSearch = () => {
-    const filtered = jobs.filter((job: Job) =>
+    const filtered = jobs.filter((job) =>
       job.title.toLowerCase().includes(searchTerm.toLowerCase())
     );
     setFilteredJobs(filtered);
@@ -101,14 +112,8 @@ const Page = () => {
   return (
     <div className="px-6 md:px-20 lg:px-40 bg-white dark:bg-gray-900 min-h-screen text-black dark:text-white transition-colors duration-300">
       {/* Theme Toggle Button */}
-      <div className="flex justify-end pt-6">
-        <button
-          onClick={toggleTheme}
-          className="px-4 py-2 bg-gray-200 dark:bg-gray-700 rounded-lg shadow hover:shadow-lg transition"
-        >
-          {theme === "light" ? "Switch to Dark 🌙" : "Switch to Light ☀️"}
-        </button>
-      </div>
+       <ThemeToggle/>     
+ 
 
       {/* Content */}
       <h1 className="text-5xl md:text-6xl lg:text-7xl w-full md:w-[400px] pt-10 font-bold">
@@ -271,8 +276,8 @@ const Page = () => {
         {loading ? (
           <p>Loading jobs...</p>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-8">
-            {filteredJobs.map((job: Job) => (
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
+            {filteredJobs.map((job) => (
               <div
                 key={job.id}
                 className="relative p-6 bg-white dark:bg-gray-800 rounded-lg shadow hover:shadow-xl transition-shadow duration-300"
@@ -294,7 +299,7 @@ const Page = () => {
                 </p>
 
                 <div className="flex gap-2 mt-4 flex-wrap">
-                  {job.tags?.map((tag: string, index: number) => (
+                  {job.tags?.map((tag, index) => (
                     <span
                       key={index}
                       className="px-3 py-1 bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 text-xs rounded-full"
