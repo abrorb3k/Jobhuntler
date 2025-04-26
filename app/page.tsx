@@ -429,7 +429,6 @@ const Page = () => {
       </section>
 
       <Footer theme={theme} />
-
       <ThemeToggle theme={theme} toggleTheme={toggleTheme} />
     </div>
   );

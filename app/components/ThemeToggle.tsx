@@ -1,18 +1,21 @@
-import React from "react";
+"use client";
 
-const ThemeToggle = ({
-  theme,
-  toggleTheme,
-}: {
+interface ThemeToggleProps {
   theme: string;
   toggleTheme: () => void;
-}) => {
+}
+
+const ThemeToggle = ({ theme, toggleTheme }: ThemeToggleProps) => {
   return (
     <button
       onClick={toggleTheme}
-      className="fixed top-22 right-4 p-2 rounded-full bg-gray-200 dark:bg-gray-700"
+      className={`fixed top-4 right-4 p-2 rounded-full ${
+        theme === "dark"
+          ? "bg-gray-700 text-yellow-300"
+          : "bg-gray-200 text-gray-700"
+      }`}
     >
-      {theme === "light" ? "🌙" : "☀️"}
+      {theme === "dark" ? "☀️" : "🌙"}
     </button>
   );
 };

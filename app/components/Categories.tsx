@@ -1,6 +1,10 @@
 import React from "react";
 import Image from "next/image";
 
+interface CategoriesProps {
+  theme: string;
+}
+
 const categories = [
   {
     id: 1,
@@ -68,16 +72,20 @@ const categories = [
   },
 ];
 
-const Categories = () => {
+const Categories = ({theme} : CategoriesProps) => {
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 my-16 px-4">
+    <div
+      className={`${
+        theme === "dark" ? "dark-styles" : "light-styles"
+      } grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 my-16 px-4`}
+    >
       {categories.map((category) => (
         <div
           key={category.id}
-          className={`p-6 rounded-lg shadow-md ${category.bg} transition hover:shadow-xl`}
+          className={`p-6 rounded-lg shadow-md ${theme =="dark" ? "bg-gray-700" :category.bg} transition hover:shadow-xl `}
         >
           <Image src={category.icon} alt="icon" width={50} height={50} />
-          <h4 className={`${category.textColor} font-bold text-2xl pt-6`}>
+          <h4 className={`${theme=="dark" ? "text-white" : category.textColor} font-bold text-2xl pt-6`}>
             {category.title}
           </h4>
           <div className="flex items-center justify-between pt-4">
@@ -85,7 +93,7 @@ const Categories = () => {
               className={`${
                 category.textColor === "text-white"
                   ? "text-white"
-                  : "text-[#7C8493]"
+                  : "text-[#a5a5b0]"
               } text-lg`}
             >
               {category.jobs}
