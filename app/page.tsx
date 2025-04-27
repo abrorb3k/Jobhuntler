@@ -150,7 +150,7 @@ const Page = () => {
           </div>
           <button
             onClick={handleSearch}
-            className="px-8 py-4 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors font-medium"
+            className="px-8 py-4 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors font-medium cursor-pointer"
           >
             Search my job
           </button>
@@ -215,7 +215,7 @@ const Page = () => {
             </h2>
             <p className="opacity-70 mt-3">Browse jobs by specializations</p>
           </div>
-          <button className="text-blue-600 hover:text-blue-700 font-medium flex items-center gap-2">
+          <button className="text-blue-600 cursor-pointer hover:text-blue-700 font-medium flex items-center gap-2">
             View all categories <span>→</span>
           </button>
         </div>
@@ -225,7 +225,7 @@ const Page = () => {
       <section className="container mx-auto px-6 my-16">
         <button
           onClick={() => setShowAddForm(true)}
-          className="px-6 py-3 bg-green-500 hover:bg-green-600 text-white rounded-lg transition-colors font-medium flex items-center gap-2"
+          className="px-6 py-3 bg-green-500 cursor-pointer hover:bg-green-600 text-white rounded-lg transition-colors font-medium flex items-center gap-2"
         >
           <span>+</span> Add New Job
         </button>
@@ -323,13 +323,13 @@ const Page = () => {
             <div className="flex gap-4 mt-8">
               <button
                 onClick={handleAddJob}
-                className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors font-medium"
+                className="px-6 py-3 bg-blue-600 cursor-pointer hover:bg-blue-700 text-white rounded-lg transition-colors font-medium"
               >
                 Submit Job
               </button>
               <button
                 onClick={() => setShowAddForm(false)}
-                className="px-6 py-3 bg-gray-200 hover:bg-gray-300 text-gray-800 rounded-lg transition-colors font-medium"
+                className="px-6 py-3 bg-gray-200 cursor-pointer hover:bg-gray-300 text-gray-800 rounded-lg transition-colors font-medium"
               >
                 Cancel
               </button>
@@ -348,7 +348,7 @@ const Page = () => {
               Browse through our latest job listings
             </p>
           </div>
-          <button className="text-blue-600 hover:text-blue-700 font-medium">
+          <button className="text-blue-600 cursor-pointer hover:text-blue-700 font-medium">
             View all jobs →
           </button>
         </div>
@@ -414,7 +414,7 @@ const Page = () => {
                   ))}
                 </div>
                 <button
-                  className={`mt-6 w-full py-2 rounded-lg font-medium ${
+                  className={`mt-6 cursor-pointer w-full py-2 rounded-lg font-medium ${
                     theme === "dark"
                       ? "bg-gray-700 hover:bg-gray-600 text-white"
                       : "bg-gray-100 hover:bg-gray-200 text-gray-800"
