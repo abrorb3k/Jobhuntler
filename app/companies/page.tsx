@@ -52,12 +52,13 @@ const CompaniesPage = () => {
 
       const data = await response.json();
       setSpecialists(data);
-    } catch (err) {
-      setError(err.message || "Specialistlarni yuklab bo'lmadi");
-    } finally {
-      setLoading(false);
-    }
-  };
+    } catch (err: unknown) {
+  let errorMessage = "Specialistlarni yuklab bo'lmadi";
+  if (err instanceof Error) {
+    errorMessage = err.message;
+  }
+  setError(errorMessage);
+}
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
