@@ -53,12 +53,15 @@ const CompaniesPage = () => {
       const data = await response.json();
       setSpecialists(data);
     } catch (err: unknown) {
-  let errorMessage = "Specialistlarni yuklab bo'lmadi";
-  if (err instanceof Error) {
-    errorMessage = err.message;
-  }
-  setError(errorMessage);
-}
+      let errorMessage = "Specialistlarni yuklab bo'lmadi";
+      if (err instanceof Error) {
+        errorMessage = err.message;
+      }
+      setError(errorMessage);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -127,12 +130,15 @@ const CompaniesPage = () => {
       setShowForm(false);
 
       setTimeout(() => setSuccessMessage(""), 3000);
-    } catch (err) {
+    } catch (err: unknown) {
       console.error("Error message:", err);
-      setError(
-        err.message ||
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError(
           "Error adding specialist. Please check the details and try again."
-      );
+        );
+      }
     } finally {
       setLoading(false);
     }
@@ -164,87 +170,61 @@ const CompaniesPage = () => {
 
   return (
     <div className="px-6 md:px-20 py-10">
+      {/* Alert messages */}
       {error && (
         <div className="mb-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded">
           {error}
         </div>
       )}
-
       {successMessage && (
         <div className="mb-4 p-4 bg-green-100 border border-green-400 text-green-700 rounded">
           {successMessage}
         </div>
       )}
 
+      {/* Top Header */}
       <div className="flex justify-between items-center mb-8">
         <h1 className="text-3xl font-bold">Top Specialists</h1>
         <button
           onClick={() => setShowForm(!showForm)}
-          className="px-4 py-2 bg-[#4640DE] cursor-pointer text-white rounded-md hover:bg-[#3730a3] transition"
+          className="px-4 py-2 bg-[#4640DE] text-white rounded-md hover:bg-[#3730a3] transition"
         >
           {showForm ? "Bekor qilish" : "Specialist Qo'shish"}
         </button>
       </div>
 
+      {/* Form Section */}
       {showForm && (
         <div className="mb-10 p-6 bg-white dark:bg-gray-800 rounded-2xl shadow">
-          <h2 className="text-2xl font-semibold mb-4">
-            Add specialist
-          </h2>
+          <h2 className="text-2xl font-semibold mb-4">Add specialist</h2>
           <form onSubmit={handleSubmit}>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-              <div>
-                <label className="block text-sm font-medium mb-1">
-                  Full name
-                </label>
-                <input
-                  type="text"
-                  name="full_name"
-                  value={newSpecialist.full_name}
-                  onChange={handleInputChange}
-                  className="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600"
-                  required
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium mb-1">Email</label>
-                <input
-                  type="email"
-                  name="email"
-                  value={newSpecialist.email}
-                  onChange={handleInputChange}
-                  className="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600"
-                  required
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium mb-1">Job</label>
-                <input
-                  type="text"
-                  name="profession"
-                  value={newSpecialist.profession}
-                  onChange={handleInputChange}
-                  className="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600"
-                  required
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium mb-1">Location</label>
-                <input
-                  type="text"
-                  name="location"
-                  value={newSpecialist.location}
-                  onChange={handleInputChange}
-                  className="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600"
-                  required
-                />
-              </div>
+              {/* Input fields */}
+              {[
+                { label: "Full name", name: "full_name", type: "text" },
+                { label: "Email", name: "email", type: "email" },
+                { label: "Job", name: "profession", type: "text" },
+                { label: "Location", name: "location", type: "text" },
+              ].map(({ label, name, type }) => (
+                <div key={name}>
+                  <label className="block text-sm font-medium mb-1">
+                    {label}
+                  </label>
+                  <input
+                    type={type}
+                    name={name}
+                    value={newSpecialist[name as keyof typeof newSpecialist]}
+                    onChange={handleInputChange}
+                    className="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600"
+                    required
+                  />
+                </div>
+              ))}
             </div>
 
+            {/* Skills */}
             <div className="mb-4">
-              <label className="block text-sm font-medium mb-1">
-                Skills
-              </label>
+              <label className="block text-sm font-medium mb-1">Skills</label>
               <div className="flex gap-2 mb-2">
                 <input
                   type="text"
@@ -259,9 +239,9 @@ const CompaniesPage = () => {
                 <button
                   type="button"
                   onClick={handleAddSkill}
-                  className="px-4 py-2 cursor-pointer bg-gray-200 dark:bg-gray-600 rounded hover:bg-gray-300 dark:hover:bg-gray-500"
+                  className="px-4 py-2 bg-gray-200 dark:bg-gray-600 rounded hover:bg-gray-300 dark:hover:bg-gray-500"
                 >
-                  Add 
+                  Add
                 </button>
               </div>
               <div className="flex flex-wrap gap-2">
@@ -283,10 +263,11 @@ const CompaniesPage = () => {
               </div>
             </div>
 
+            {/* Buttons */}
             <div className="flex gap-2">
               <button
                 type="submit"
-                className="px-4 py-2 cursor-pointer bg-[#4640DE] text-white rounded-md hover:bg-[#3730a3] transition"
+                className="px-4 py-2 bg-[#4640DE] text-white rounded-md hover:bg-[#3730a3] transition"
                 disabled={loading}
               >
                 {loading ? "Sending..." : "Add"}
@@ -303,6 +284,7 @@ const CompaniesPage = () => {
         </div>
       )}
 
+      {/* Specialist Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         {specialists.map((specialist) => (
           <Link key={specialist.id} href={`/companies/${specialist.id}`}>
@@ -337,7 +319,7 @@ const CompaniesPage = () => {
                 ))}
               </div>
               <div className="mt-5">
-                <button className="px-4 py-2 cursor-pointer bg-[#4640DE] text-white text-sm rounded-md hover:bg-[#3730a3] transition">
+                <button className="px-4 py-2 bg-[#4640DE] text-white text-sm rounded-md hover:bg-[#3730a3] transition">
                   See Profile
                 </button>
               </div>

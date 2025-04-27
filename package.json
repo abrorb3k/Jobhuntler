@@ -4,6 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",
+    "build:fix": "set NODE_OPTIONS=--experimental-vm-modules && next build",
+    "build:windows": "set NODE_OPTIONS=--experimental-vm-modules --openssl-legacy-provider && next build",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"
